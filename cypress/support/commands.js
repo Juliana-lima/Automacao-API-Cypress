@@ -51,6 +51,5 @@ Cypress.Commands.add('cadastrarProduto', (token, produto, preco, descricao, quan
             "quantidade": quantidade
           }
     })
-        
-    
 })
+
