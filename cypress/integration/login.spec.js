@@ -2,7 +2,7 @@
 
 
 describe('Login - Teste da API Serverest', () => {
-    it('Deve fazer login com sucesso', () => {
+    it.only('Deve fazer login com sucesso', () => {
         cy.request({ //Método + Objeto
             method: 'POST',
             url:"login",
