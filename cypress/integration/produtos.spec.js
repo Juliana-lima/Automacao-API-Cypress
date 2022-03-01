@@ -2,6 +2,11 @@
 
 
 describe('Testes da Funcionalidade Produtos', () => {
+    let token
+    before(() => {
+        cy.token('jorge@qa.com.br', 'teste').then(tkn => { token = tkn })
+    });
+
     it('Listar Produtos', () => {
         cy.request({
             method: 'GET',
@@ -14,23 +19,36 @@ describe('Testes da Funcionalidade Produtos', () => {
         })
     });
 
-    it.only('Cadastrar Produto', () => {
+    it('Cadastrar Produto', () => {
+        let produto = `Produto EBAC ${Math.floor(Math.random() * 100000000)}`
         cy.request({
             method: 'POST',
             url: 'produtos',
             body:{
-                "nome": "Produto EBAC 1003",
-                "preco": 35,
-                "descricao": "Caderno",
-                "quantidade": 260
+                "nome": produto,
+                "preco": 85,
+                "descricao": "Blusa",
+                "quantidade": 25
               },
-              headers: {authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlhbmF0ZXN0YWRvcmFAcWEuY29tLmJyIiwicGFzc3dvcmQiOiJ0ZXN0ZSIsImlhdCI6MTY0NjE0MDQ3OCwiZXhwIjoxNjQ2MTQxMDc4fQ.TsktqogfexxQYmDgPB2mRguPatpJVmSPXN5JMo97WPo'}
+              headers: {authorization: token}
         }).then((response) =>{
             expect(response.status).to.equal(201)
             expect(response.body.message).to.equal('Cadastro realizado com sucesso')
             
         })
     });
-})
+
+    it.only('Deve validar mensagem de erro ao cadastrar produto repetido', () => {
+        cy.cadastrarProduto(token, "Produto EBAC 96446", 90, "Calça", 30)
+        .then((response) =>{
+            expect(response.status).to.equal(400)
+            expect(response.body.message).to.equal("Já existe produto com esse nome")
+        })
+    });
+
+
+});
+
+
 
     
